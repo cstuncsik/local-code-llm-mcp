@@ -84,7 +84,7 @@ local-code-llm-mcp/
 
 ## 🧠 Features
 
-- Fully offline
+- Locally indexed code context (reduces token usage with external LLMs)
 - Uses AST-based chunking
 - Ollama-powered local embeddings
 - Fast semantic search via Milvus
