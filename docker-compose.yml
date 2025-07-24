@@ -1,11 +1,19 @@
 version: "3.8"
 services:
   milvus:
-    image: milvusdb/milvus:v2.3.0
+    image: milvusdb/milvus:v2.4.0
+    command: ["milvus", "run", "standalone"]
     ports:
       - "19530:19530"
       - "9091:9091"
     container_name: milvus
+    environment:
+      MILVUS_LOG_LEVEL: debug
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9091/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   code-context-mcp:
     build:
@@ -13,6 +21,8 @@ services:
     ports:
       - "4444:4444"
     environment:
-      EMBEDDING_PROVIDER: ollama
       MILVUS_ADDRESS: "host.docker.internal:19530"
+      EMBEDDING_PROVIDER: ${EMBEDDING_PROVIDER}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
     container_name: code-context-mcp

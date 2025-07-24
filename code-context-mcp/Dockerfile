@@ -7,7 +7,7 @@ RUN apt-get update && \
 
 WORKDIR /app
 
-RUN npm install -g @zilliz/code-context-mcp
+RUN npm install -g @zilliz/code-context-mcp@latest
 
 EXPOSE 4444
 
