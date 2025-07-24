@@ -1,0 +1,18 @@
+version: "3.8"
+services:
+  milvus:
+    image: milvusdb/milvus:v2.3.0
+    ports:
+      - "19530:19530"
+      - "9091:9091"
+    container_name: milvus
+
+  code-context-mcp:
+    build:
+      context: ./code-context-mcp
+    ports:
+      - "4444:4444"
+    environment:
+      EMBEDDING_PROVIDER: ollama
+      MILVUS_ADDRESS: "host.docker.internal:19530"
+    container_name: code-context-mcp
