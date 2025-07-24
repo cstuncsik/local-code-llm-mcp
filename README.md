@@ -60,6 +60,28 @@ claude mcp add local-code-mcp \
   -e EMBEDDING_PROVIDER=ollama
 ```
 
+#### Alternatively, use OpenAI
+
+If Ollama is not supported, you can use OpenAI instead:
+
+```bash
+claude mcp add local-code-mcp \
+  -s user \
+  "docker exec -i code-context-mcp code-context-mcp --milvus-uri http://host.docker.internal:19530" \
+  -e EMBEDDING_PROVIDER=openai -e OPENAI_API_KEY=sk-your-openai-api-key
+```
+
+#### Or use Gemini
+
+If you prefer to use Gemini:
+
+```bash
+claude mcp add local-code-mcp \
+  -s user \
+  "docker exec -i code-context-mcp code-context-mcp --milvus-uri http://host.docker.internal:19530" \
+  -e EMBEDDING_PROVIDER=gemini -e GEMINI_API_KEY=your-gemini-api-key
+```
+
 ### 6. Interact
 
 Ask your LLM:
