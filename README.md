@@ -46,6 +46,17 @@ docker-compose up --build -d
 
 ### 5. Configure your MCP client (e.g., Claude CLI, ChatGPT Desktop)
 
+#### Add MCP to Claude Code (CLI)
+
+If you're using Claude Code in the terminal, run this command to add the local MCP:
+
+```bash
+claude code mcp add local-code-mcp \
+  --command docker \
+  --args exec -i code-context-mcp code-context-mcp --milvus-uri http://host.docker.internal:19530 \
+  --env EMBEDDING_PROVIDER=ollama
+```
+
 Add this to your MCP config:
 ```json
 {
