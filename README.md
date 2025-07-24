@@ -20,6 +20,9 @@ cd local-code-llm-mcp
 
 ### 3. Install Ollama and pull a model
 
+> ℹ️ **Note:** The current MCP server (`@zilliz/code-context-mcp`) does not yet support `ollama` as an embedding provider.
+> Please use `openai` or `gemini` for now until support for local models is added.
+
 #### On macOS:
 ```bash
 brew install ollama
@@ -81,9 +84,16 @@ local-code-llm-mcp/
     └── Dockerfile
 ```
 
+
 ## 🧠 Features
 
 - Locally indexed code context (reduces token usage with external LLMs)
 - Uses AST-based chunking
 - Ollama-powered local embeddings
 - Fast semantic search via Milvus
+
+
+## 🔗 References
+
+- [@zilliz/code-context-mcp](https://github.com/zilliztech/code-context-mcp)
+- [Milvus Vector DB](https://github.com/milvus-io/milvus)
