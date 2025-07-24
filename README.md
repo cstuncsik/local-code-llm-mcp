@@ -23,6 +23,7 @@ cd local-code-llm-mcp
 #### On macOS:
 ```bash
 brew install ollama
+brew services start ollama
 ollama pull unclemusclez/jina-embeddings-v2-base-code
 ```
 
