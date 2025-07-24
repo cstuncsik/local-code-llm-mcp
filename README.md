@@ -51,23 +51,10 @@ docker-compose up --build -d
 If you're using Claude Code in the terminal, run this command to add the local MCP:
 
 ```bash
-claude code mcp add local-code-mcp \
-  --command docker \
-  --args exec -i code-context-mcp code-context-mcp --milvus-uri http://host.docker.internal:19530 \
-  --env EMBEDDING_PROVIDER=ollama
-```
-
-Add this to your MCP config:
-```json
-{
-  "command": "docker",
-  "args": [
-    "exec", "-i", "code-context-mcp",
-    "code-context-mcp",
-    "--milvus-uri", "http://host.docker.internal:19530"
-  ],
-  "env": { "EMBEDDING_PROVIDER": "ollama" }
-}
+claude mcp add local-code-mcp \
+  -s user \
+  "docker exec -i code-context-mcp code-context-mcp --milvus-uri http://host.docker.internal:19530" \
+  -e EMBEDDING_PROVIDER=ollama
 ```
 
 ### 6. Interact
