@@ -14,6 +14,79 @@ Run local semantic code search on any codebase using Docker, Milvus, and Code Co
 ```bash
 git clone git@github.com:cstuncsik/local-code-llm-mcp.git
 cd local-code-llm-mcp
+```
+
+### Run Code Context MCP and Ollama Locally (Recommended)
+
+You can run `code-context-mcp` and `ollama` locally without Docker for better performance and easier filesystem access. Only Milvus runs in Docker.
+
+
+1. **Install Ollama and MCP locally**
+
+   ```bash
+   brew install ollama
+   npm install -g @zilliz/code-context-mcp@latest
+   ```
+
+   Or clone and build MCP manually from:
+   https://github.com/zilliztech/code-context
+
+2. **Start Milvus in Docker**
+
+   Make sure your `docker-compose.yml` includes Milvus:
+
+   ```bash
+   docker compose up -d milvus
+   ```
+
+3. **Start MCP from your code directory**
+
+   ```bash
+   EMBEDDING_PROVIDER=Ollama \
+   OLLAMA_MODEL=llama3 \
+   EMBEDDING_MODEL=nomic-embed-text \
+   MILVUS_ADDRESS=localhost:19530 \
+   OLLAMA_HOST=http://localhost:11434 \
+   code-context-mcp start \
+     --workspace . \
+     --milvus-uri localhost:19530 \
+     --ollama-host http://localhost:11434
+   ```
+
+   Or with Claude CLI:
+
+   ```bash
+   claude mcp add local-code-mcp -s user -- \
+     EMBEDDING_PROVIDER=Ollama \
+     OLLAMA_MODEL=llama3 \
+     EMBEDDING_MODEL=nomic-embed-text \
+     MILVUS_ADDRESS=localhost:19530 \
+     OLLAMA_HOST=http://localhost:11434 \
+     code-context-mcp start \
+     --workspace . \
+     --milvus-uri localhost:19530 \
+     --ollama-host http://localhost:11434
+   ```
+
+> ✅ Required environment variables for local setup (can be set in a `.env` file or exported in your shell):
+>
+> ```
+> EMBEDDING_PROVIDER=Ollama
+> OLLAMA_MODEL=llama3
+> EMBEDDING_MODEL=nomic-embed-text
+> MILVUS_ADDRESS=localhost:19530
+> OLLAMA_HOST=http://localhost:11434
+> ```
+>
+> These must be set when running `code-context-mcp` outside of Docker to avoid fallback to OpenAI.
+
+> 💡 This setup avoids Docker overhead and speeds up indexing, especially on large codebases.
+
+## 🐳 Running Everything with Docker (Alternative)
+
+### Setup Docker Environment
+
+```bash
 docker compose up --build -d
 ```
 
@@ -48,6 +121,7 @@ To avoid this, mount a persistent volume or bind mount the `.code-context` folde
 #### Full example with persistent index
 
 ```bash
+# Full Claude CLI command with persistent index volume
 claude mcp add local-code-mcp -s user -- \
   docker run --rm -i \
     -v .:/workspace \
@@ -72,6 +146,8 @@ This will reuse the cached chunks and embeddings from `.code-context` for faster
 > Index this repo for semantic search with MCP local-code-mcp at path .
 > ```
 > This ensures the correct path is passed to the MCP container and avoids issues with mismatched host paths.
+
+> ✅ Tip: If running MCP locally (not in Docker), it uses `~/.code-context` for index cache by default, so the data persists automatically between runs.
 
 ### Start using it
 
