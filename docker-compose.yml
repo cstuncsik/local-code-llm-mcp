@@ -55,7 +55,6 @@ services:
       context: ./code-context-mcp
     ports:
       - "4444:4444"
-    command: ["code-context-mcp", "--transport", "http", "--port", "4444", "--host", "0.0.0.0", "--milvus-uri", "milvus:19530"]
     environment:
       MILVUS_ADDRESS: "milvus:19530"
       EMBEDDING_PROVIDER: Ollama
@@ -83,6 +82,7 @@ services:
     entrypoint: ["/bin/sh", "-c", "\
       ollama serve & \
       sleep 2 && \
+      ollama pull llama3 && \
       ollama pull nomic-embed-text && \
       wait"]
     healthcheck:

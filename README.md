@@ -32,13 +32,13 @@ claude mcp add local-code-mcp -s user -- \
     -e OLLAMA_HOST=http://host.docker.internal:11434 \
     -w /workspace \
     code-context-mcp \
-    code-context-mcp start --transport stdio --workspace /workspace
+    code-context-mcp start --workspace /workspace
 ```
 
 > ✅ **Tip:** When asking Claude to index the codebase, explicitly specify the path as `.`:
 >
 > ```
-> Please index this repo for semantic search with MCP with path .
+> Index this repo for semantic search with MCP local-code-mcp at path .
 > ```
 > This ensures the correct path is passed to the MCP container and avoids issues with mismatched host paths.
 
