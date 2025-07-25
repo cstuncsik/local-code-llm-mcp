@@ -66,6 +66,7 @@ services:
     volumes:
       - ./mcp_logs:/app/logs
       - ./mcp_data:/app/data
+      - ./mcp_cache:/app/cache
     depends_on:
       milvus:
         condition: service_healthy
@@ -92,4 +93,5 @@ services:
       retries: 30
       start_period: 60s
 volumes:
+  milvus_data:
   ollama-data:

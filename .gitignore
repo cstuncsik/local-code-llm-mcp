@@ -10,3 +10,4 @@ minio_data/
 ollama_data/
 mcp_data/
 mcp_logs/
+mcp_cache/
