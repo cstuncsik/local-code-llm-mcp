@@ -53,17 +53,6 @@ How is the checkout process handled?
 Show me the API routes related to orders.
 ```
 
-## 🔧 Project Structure
-
-```
-local-code-llm-mcp/
-├── docker-compose.yml
-├── .env.example
-├── README.md
-└── code-context-mcp/
-    └── Dockerfile
-```
-
 ## 🧠 Features
 
 - Local code indexing for LLM context (reduces token usage)
