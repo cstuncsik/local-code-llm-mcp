@@ -4,11 +4,6 @@ services:
     image: quay.io/coreos/etcd:v3.5.5
     container_name: milvus-etcd
     environment:
-      ETCD_AUTO_COMPACTION_MODE: revision
-      ETCD_AUTO_COMPACTION_RETENTION: "1000"
-      ETCD_QUOTA_BACKEND_BYTES: "4294967296"
-      ETCD_SNAPSHOT_COUNT: "50000"
-      ETCD_ENABLE_V2: "false"
       ETCD_LISTEN_CLIENT_URLS: http://0.0.0.0:2379
       ETCD_ADVERTISE_CLIENT_URLS: http://milvus-etcd:2379
     ports:
@@ -22,7 +17,6 @@ services:
       - "9091:9091"
     container_name: milvus
     environment:
-      MILVUS_LOG_LEVEL: debug
       ETCD_ENDPOINTS: milvus-etcd:2379
       STORAGE_TYPE: local
       MINIO_ADDRESS: "milvus-minio:9000"
@@ -39,9 +33,9 @@ services:
       - minio
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9091/healthz"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      interval: 5s
+      timeout: 3s
+      retries: 5
 
   minio:
     image: minio/minio
@@ -63,10 +57,37 @@ services:
       - "4444:4444"
     environment:
       MILVUS_ADDRESS: "milvus:19530"
-      EMBEDDING_PROVIDER: ${EMBEDDING_PROVIDER}
-      OPENAI_API_KEY: ${OPENAI_API_KEY}
-      GEMINI_API_KEY: ${GEMINI_API_KEY}
+      EMBEDDING_PROVIDER: Ollama
+      EMBEDDING_MODEL: nomic-embed-text
+      OLLAMA_MODEL: llama3
+      OLLAMA_HOST: "http://ollama:11434"
     container_name: code-context-mcp
+    volumes:
+      - ./mcp_logs:/app/logs
+      - ./mcp_data:/app/data
     depends_on:
       milvus:
         condition: service_healthy
+      ollama:
+        condition: service_healthy
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ./ollama_data:/root/.ollama
+    entrypoint: ["/bin/sh", "-c", "\
+      ollama serve & \
+      sleep 2 && \
+      ollama pull nomic-embed-text && \
+      wait"]
+    healthcheck:
+      test: ["CMD-SHELL", "ollama list | grep -q nomic-embed-text"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 60s
+volumes:
+  ollama-data:

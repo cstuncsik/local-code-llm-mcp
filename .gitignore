@@ -7,3 +7,6 @@ etcd_data/
 milvus_data/
 milvus_logs/
 minio_data/
+ollama_data/
+mcp_data/
+mcp_logs/
