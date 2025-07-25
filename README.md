@@ -31,7 +31,21 @@ You can run `code-context-mcp` and `ollama` locally without Docker for better pe
    Or clone and build MCP manually from:
    https://github.com/zilliztech/code-context
 
-2. **Start Milvus in Docker**
+2. **Start Ollama and pull required models**
+
+   Start the Ollama service and download the required models:
+
+   ```bash
+   ollama serve &
+   # Or use Homebrew services to run Ollama in the background
+   brew services start ollama
+   ollama pull llama3
+   ollama pull nomic-embed-text
+   ```
+
+   This ensures that the required models are available for embeddings.
+
+3. **Start Milvus in Docker**
 
    Make sure your `docker-compose.yml` includes Milvus:
 
@@ -39,7 +53,7 @@ You can run `code-context-mcp` and `ollama` locally without Docker for better pe
    docker compose up -d milvus
    ```
 
-3. **Start MCP from your code directory**
+4. **Start MCP from your code directory**
 
    ```bash
    EMBEDDING_PROVIDER=Ollama \
