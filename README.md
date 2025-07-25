@@ -35,6 +35,37 @@ claude mcp add local-code-mcp -s user -- \
     code-context-mcp start --workspace /workspace
 ```
 
+### Persisting the Index (Optional but Recommended)
+
+By default, when running `docker run --rm`, the container is removed after each run. This means the `.code-context` folder containing the index is lost, and the codebase will be re-indexed every time you restart the process.
+
+To avoid this, mount a persistent volume or bind mount the `.code-context` folder from your local project:
+
+```bash
+-v "$(pwd)/.code-context":/workspace/.code-context
+```
+
+#### Full example with persistent index
+
+```bash
+claude mcp add local-code-mcp -s user -- \
+  docker run --rm -i \
+    -v .:/workspace \
+    -v "$(pwd)/.code-context":/workspace/.code-context \
+    -e EMBEDDING_PROVIDER=Ollama \
+    -e OLLAMA_MODEL=llama3 \
+    -e EMBEDDING_MODEL=nomic-embed-text \
+    -e MILVUS_ADDRESS=host.docker.internal:19530 \
+    -e OLLAMA_HOST=http://host.docker.internal:11434 \
+    -w /workspace \
+    code-context-mcp \
+    code-context-mcp start --workspace /workspace
+```
+
+This will reuse the cached chunks and embeddings from `.code-context` for faster startup and better performance.
+
+> 💡 Tip: You can safely commit `.code-context` to `.gitignore` to avoid versioning large embedding data.
+
 > ✅ **Tip:** When asking Claude to index the codebase, explicitly specify the path as `.`:
 >
 > ```
