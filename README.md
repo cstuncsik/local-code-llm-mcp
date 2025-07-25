@@ -12,7 +12,7 @@ Run local semantic code search on any codebase using Docker, Milvus, and Code Co
 ### Setup
 
 ```bash
-git clone https://github.com/yourusername/local-code-llm-mcp.git
+git clone git@github.com:cstuncsik/local-code-llm-mcp.git
 cd local-code-llm-mcp
 docker compose up --build -d
 ```
@@ -21,12 +21,10 @@ docker compose up --build -d
 
 Run this command from inside the project folder you want to index:
 
-To connect a local MCP instance that runs in a Docker container and works in any project folder, run:
-
 ```bash
 claude mcp add local-code-mcp -s user -- \
   docker run --rm -i \
-    -v "$PWD":/workspace \
+    -v .:/workspace \
     -e EMBEDDING_PROVIDER=Ollama \
     -e OLLAMA_MODEL=llama3 \
     -e EMBEDDING_MODEL=nomic-embed-text \
@@ -37,18 +35,22 @@ claude mcp add local-code-mcp -s user -- \
     code-context-mcp start --transport stdio --workspace /workspace
 ```
 
+> ✅ **Tip:** When asking Claude to index the codebase, explicitly specify the path as `.`:
+>
+> ```
+> Please index this repo for semantic search with MCP with path .
+> ```
+> This ensures the correct path is passed to the MCP container and avoids issues with mismatched host paths.
+
 ### Start using it
 
 Ask your LLM:
 
 ```
-Please index this repo for semantic search with MCP
-```
-
-Or:
-
-```
 Where are the webhook handlers defined?
+What happens when a user logs in?
+How is the checkout process handled?
+Show me the API routes related to orders.
 ```
 
 ## 🔧 Project Structure
