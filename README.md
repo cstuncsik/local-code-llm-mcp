@@ -1,47 +1,51 @@
 # local-code-llm-mcp
 
-Local semantic code search for any codebase using Docker, Milvus, and MCP — integrates with Claude Code, Gemini CLI, ChatGPT Desktop, and others.
+Run local semantic code search on any codebase using Docker, Milvus, and Code Context MCP. Works with Claude Code, Gemini CLI, ChatGPT Desktop, and more.
 
 ## 🚀 Getting Started
 
-### 1. Prerequisites
+### Prerequisites
 
 - Docker Desktop (or Docker Engine)
 - Git
 
-### 2. Clone and setup
+### Setup
 
 ```bash
 git clone https://github.com/yourusername/local-code-llm-mcp.git
 cd local-code-llm-mcp
-```
-
-### 3. Start the stack
-
-```bash
 docker compose up --build -d
 ```
 
-### 4. Add MCP to your client
+### Connect MCP to Claude Code (CLI)
 
-#### Add MCP to Claude Code (CLI)
+Run this command from inside the project folder you want to index:
 
-If you're using Claude Code in the terminal, run this command to add the local MCP:
+To connect a local MCP instance that runs in a Docker container and works in any project folder, run:
 
 ```bash
-claude mcp add local-code-mcp \
-  -s user \
-  "docker exec -i code-context-mcp code-context-mcp --milvus-uri http://host.docker.internal:19530"
+claude mcp add local-code-mcp -s user -- \
+  docker run --rm -i \
+    -v "$PWD":/workspace \
+    -e EMBEDDING_PROVIDER=Ollama \
+    -e OLLAMA_MODEL=llama3 \
+    -e EMBEDDING_MODEL=nomic-embed-text \
+    -e MILVUS_ADDRESS=host.docker.internal:19530 \
+    -e OLLAMA_HOST=http://host.docker.internal:11434 \
+    -w /workspace \
+    code-context-mcp \
+    code-context-mcp start --transport stdio --workspace /workspace
 ```
 
-### 5. Interact
+### Start using it
 
 Ask your LLM:
+
 ```
-Please index this repo for semantic search
+Please index this repo for semantic search with MCP
 ```
 
-or:
+Or:
 
 ```
 Where are the webhook handlers defined?
@@ -58,14 +62,12 @@ local-code-llm-mcp/
     └── Dockerfile
 ```
 
-
 ## 🧠 Features
 
-- Locally indexed code context (reduces token usage with external LLMs)
-- Uses AST-based chunking
+- Local code indexing for LLM context (reduces token usage)
+- AST-based code chunking
 - Ollama-powered local embeddings
 - Fast semantic search via Milvus
-
 
 ## 🔗 References
 

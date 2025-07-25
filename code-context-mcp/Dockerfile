@@ -8,7 +8,3 @@ RUN apt-get update && \
 WORKDIR /app
 
 RUN npm install -g @zilliz/code-context-mcp@latest
-
-EXPOSE 4444
-
-CMD ["code-context-mcp", "--milvus-uri", "http://host.docker.internal:19530"]

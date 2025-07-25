@@ -55,12 +55,14 @@ services:
       context: ./code-context-mcp
     ports:
       - "4444:4444"
+    command: ["code-context-mcp", "--transport", "http", "--port", "4444", "--host", "0.0.0.0", "--milvus-uri", "milvus:19530"]
     environment:
       MILVUS_ADDRESS: "milvus:19530"
       EMBEDDING_PROVIDER: Ollama
       EMBEDDING_MODEL: nomic-embed-text
       OLLAMA_MODEL: llama3
       OLLAMA_HOST: "http://ollama:11434"
+      NODE_ENV: production
     container_name: code-context-mcp
     volumes:
       - ./mcp_logs:/app/logs
