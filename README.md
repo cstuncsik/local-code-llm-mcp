@@ -20,16 +20,14 @@ cd local-code-llm-mcp
 
 You can run `code-context-mcp` and `ollama` locally without Docker for better performance and easier filesystem access. Only Milvus runs in Docker.
 
-
-1. **Install Ollama and MCP locally**
+1. **Install Ollama locally**
 
    ```bash
-   brew install ollama
-   npm install -g @zilliz/code-context-mcp@latest
-   ```
+   curl -fsSL https://ollama.com/install.sh | sh
 
-   Or clone and build MCP manually from:
-   https://github.com/zilliztech/code-context
+   # or use brew on MacOS
+   brew install ollama
+   ```
 
 2. **Start Ollama and pull required models**
 
@@ -39,6 +37,7 @@ You can run `code-context-mcp` and `ollama` locally without Docker for better pe
    ollama serve &
    # Or use Homebrew services to run Ollama in the background
    brew services start ollama
+
    ollama pull llama3
    ollama pull nomic-embed-text
    ```
@@ -47,40 +46,51 @@ You can run `code-context-mcp` and `ollama` locally without Docker for better pe
 
 3. **Start Milvus in Docker**
 
-   Make sure your `docker-compose.yml` includes Milvus:
+   Spin up a Milvus container only (the same `docker-compose.yml` is used):
 
    ```bash
    docker compose up -d milvus
    ```
 
-4. **Start MCP from your code directory**
+4. **Add MPC server**
 
-   ```bash
-   EMBEDDING_PROVIDER=Ollama \
-   OLLAMA_MODEL=llama3 \
-   EMBEDDING_MODEL=nomic-embed-text \
-   MILVUS_ADDRESS=localhost:19530 \
-   OLLAMA_HOST=http://localhost:11434 \
-   code-context-mcp start \
-     --workspace . \
-     --milvus-uri localhost:19530 \
-     --ollama-host http://localhost:11434
-   ```
+  ```bash
+  # Add the Code Context MCP server
+  claude mcp add local-code-mcp -e EMBEDDING_PROVIDER=Ollama -e OLLAMA_MODEL=llama3 -e EMBEDDING_MODEL=nomic-embed-text -e MILVUS_ADDRESS=localhost:19530 -e OLLAMA_HOST=http://localhost:11434 -- npx @zilliz/code-context-mcp@latest
+  ```
 
-   Or with Claude CLI:
+  Or the config directly
 
-   ```bash
-   claude mcp add local-code-mcp -s user -- \
-     EMBEDDING_PROVIDER=Ollama \
-     OLLAMA_MODEL=llama3 \
-     EMBEDDING_MODEL=nomic-embed-text \
-     MILVUS_ADDRESS=localhost:19530 \
-     OLLAMA_HOST=http://localhost:11434 \
-     code-context-mcp start \
-     --workspace . \
-     --milvus-uri localhost:19530 \
-     --ollama-host http://localhost:11434
-   ```
+  ```json
+    {
+      "mcpServers": {
+        "local-code-mcp": {
+          "command": "npx",
+          "args": ["@zilliz/code-context-mcp@latest"],
+          "env": {
+            "EMBEDDING_PROVIDER": "Ollama",
+            "OLLAMA_MODEL": "llama3",
+            "EMBEDDING_MODEL": "nomic-embed-text",
+            "MILVUS_ADDRESS": "localhost:19530",
+            "OLLAMA_HOST": "http://localhost:11434"
+          }
+        }
+      }
+    }
+  ```
+
+  **Start MCP from your code directory for debugging purpose**
+
+  ```bash
+  npm install -g @zilliz/code-context-mcp@latest
+
+  EMBEDDING_PROVIDER=Ollama \
+  OLLAMA_MODEL=llama3 \
+  EMBEDDING_MODEL=nomic-embed-text \
+  code-context-mcp start \
+    --milvus-uri localhost:19530 \
+    --ollama-host http://localhost:11434
+  ```
 
 > ✅ Required environment variables for local setup (can be set in a `.env` file or exported in your shell):
 >
@@ -183,5 +193,5 @@ Show me the API routes related to orders.
 
 ## 🔗 References
 
-- [@zilliz/code-context-mcp](https://github.com/zilliztech/code-context-mcp)
+- [@zilliz/code-context-mcp](https://github.com/zilliztech/code-context)
 - [Milvus Vector DB](https://github.com/milvus-io/milvus)
