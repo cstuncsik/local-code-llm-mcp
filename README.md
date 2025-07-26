@@ -89,6 +89,8 @@ You run `code-context-mcp` and `ollama` locally, only Milvus runs in Docker.
     }
   ```
 
+  [See other MCP Client Configurations at @zilliz/code-context-mc github page](https://github.com/zilliztech/code-context?tab=readme-ov-file#other-mcp-client-configurations-cursor-windsurf-etc)
+
   **Start MCP from your code directory for debugging purpose**
 
   ```bash
