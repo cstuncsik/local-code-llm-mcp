@@ -18,7 +18,18 @@ cd local-code-llm-mcp
 
 ### Run Code Context MCP and Ollama Locally (Recommended)
 
-You can run `code-context-mcp` and `ollama` locally without Docker for better performance and easier filesystem access. Only Milvus runs in Docker.
+⚙️ Local Setup
+
+**Pros:**
+- Faster file access (especially on macOS)
+- Easier debugging and inspection
+- Persistent index stored in `~/.code-context`
+
+**Cons:**
+- Requires local installation of Ollama
+- Slightly more setup steps
+
+You run `code-context-mcp` and `ollama` locally, only Milvus runs in Docker.
 
 1. **Install Ollama locally**
 
@@ -55,7 +66,6 @@ You can run `code-context-mcp` and `ollama` locally without Docker for better pe
 4. **Add MPC server**
 
   ```bash
-  # Add the Code Context MCP server
   claude mcp add local-code-mcp -e EMBEDDING_PROVIDER=Ollama -e OLLAMA_MODEL=llama3 -e EMBEDDING_MODEL=nomic-embed-text -e MILVUS_ADDRESS=localhost:19530 -e OLLAMA_HOST=http://localhost:11434 -- npx @zilliz/code-context-mcp@latest
   ```
 
@@ -106,7 +116,21 @@ You can run `code-context-mcp` and `ollama` locally without Docker for better pe
 
 > 💡 This setup avoids Docker overhead and speeds up indexing, especially on large codebases.
 
+> ✅ Tip: If running MCP locally (not in Docker), it uses `~/.code-context` for index cache by default, so the data persists automatically between runs.
+
 ## 🐳 Running Everything with Docker (Alternative)
+
+🐋 Docker Setup (All-in-One)
+
+**Pros:**
+- Easy to set up with a single command
+- Clean separation from host environment
+- Consistent across different machines
+
+**Cons:**
+- Slower indexing due to Docker filesystem I/O
+- Index is ephemeral unless volume is persisted
+- Could be harder to debug inside the container
 
 ### Setup Docker Environment
 
@@ -171,7 +195,6 @@ This will reuse the cached chunks and embeddings from `.code-context` for faster
 > ```
 > This ensures the correct path is passed to the MCP container and avoids issues with mismatched host paths.
 
-> ✅ Tip: If running MCP locally (not in Docker), it uses `~/.code-context` for index cache by default, so the data persists automatically between runs.
 
 ### Start using it
 
@@ -195,3 +218,4 @@ Show me the API routes related to orders.
 
 - [@zilliz/code-context-mcp](https://github.com/zilliztech/code-context)
 - [Milvus Vector DB](https://github.com/milvus-io/milvus)
+- [Ollama](https://github.com/ollama/ollama)
