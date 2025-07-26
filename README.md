@@ -118,6 +118,50 @@ You run `code-context-mcp` and `ollama` locally, only Milvus runs in Docker.
 
 > ✅ Tip: If running MCP locally (not in Docker), it uses `~/.code-context` for index cache by default, so the data persists automatically between runs.
 
+### 🪟 Windows Notes
+
+If you're on **Windows**, the recommended approach is to use **WSL2 with Ubuntu**.
+
+🧰 Prerequisites
+
+  •	WSL2 with Ubuntu
+  Install from Microsoft Store if not already:
+  ```bash
+  wsl --install -d Ubuntu
+  ```
+
+  •	Docker Desktop for Windows
+
+    •	Enable the “Use WSL 2 based engine” in Docker settings.
+
+    •	Allow Docker to integrate with your WSL distribution.
+
+  •	Ollama (inside WSL2) (Ollama now supports Linux/WSL via .deb)
+
+  ```bash
+  curl -fsSL https://ollama.com/install.sh | sh
+  ```
+
+  •	Node.js inside WSL2
+
+  ```bash
+  curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+  sudo apt install -y nodejs
+  ```
+
+After installing Ollama and Node.js inside your WSL2 environment, and Docker Desktop on Windows with WSL integration enabled, all setup steps are the same as described above.
+
+💡 *Make sure Docker is accessible from WSL and the Ollama service is started with `ollama serve &` before launching MCP.*
+
+You can pull the models like this:
+
+```bash
+ollama pull llama3
+ollama pull nomic-embed-text
+```
+
+Then run the same `docker compose up -d milvus`, `code-context-mcp start`, and `claude mcp add` commands as described.
+
 ## 🐳 Running Everything with Docker (Alternative)
 
 🐋 Docker Setup (All-in-One)
